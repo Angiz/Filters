@@ -25,9 +25,9 @@ class MyForm(QMainWindow):
                                             'Obrazy', "Image files (*.jpg *.gif *.png)")
 
         pixmap = QPixmap(fname[0])
-        self.ui.photoLabel.setPixmap(QPixmap(pixmap))
-        self.ui.photoLabel.resize(pixmap.width(), pixmap.height())
-        self.ui.photoLabel.setGeometry(20, 20, 540, 540)
+        h = self.ui.photoLabel.height()
+        w = self.ui.photoLabel.width()
+        self.ui.photoLabel.setPixmap(QPixmap(pixmap).scaled(w, h, Qt.KeepAspectRatio))
 
     def MedianFilter(self):
         new_image = cv2.medianBlur(self.pixmap)
