@@ -48,6 +48,12 @@ class Ui_Filters(object):
         self.erosionButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.erosionButton.setObjectName("erosionButton")
         self.verticalLayout.addWidget(self.erosionButton)
+        self.photoLabel = QtWidgets.QLabel(self.centralwidget)
+        self.photoLabel.setGeometry(QtCore.QRect(40, 30, 521, 531))
+        self.photoLabel.setText("")
+        self.photoLabel.setPixmap(
+            QtGui.QPixmap("../../../../../Pictures/42901586_10158454514613084_6388907296117751808_n.jpg"))
+        self.photoLabel.setObjectName("photoLabel")
         Filters.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(Filters)
         self.statusbar.setObjectName("statusbar")

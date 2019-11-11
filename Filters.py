@@ -3,6 +3,10 @@ from PyQt5.QtWidgets import *
 from FiltersUI import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+from PIL import Image, ImageFilter
 
 
 class MyForm(QMainWindow):
@@ -11,13 +15,7 @@ class MyForm(QMainWindow):
         self.ui = Ui_Filters()
         self.ui.setupUi(self)
         self.ui.loadButton.clicked.connect(self.OpenFileNameDialog)
-        label = QLabel(self)
-        label.setGeometry(20, 20, 540, 540)
-
-        pixmap = QPixmap("image.jpg")
-        label.setPixmap(QPixmap(pixmap))
-        #self.resize(pixmap.width(), pixmap.height())
-
+        self.ui.medianButton.clicked.connect(self.MedianFilter)
 
         self.show()
 
@@ -26,15 +24,19 @@ class MyForm(QMainWindow):
         fname = QFileDialog.getOpenFileName(self, 'Open file',
                                             'Obrazy', "Image files (*.jpg *.gif *.png)")
 
-        if fname[0]:
-           # label = QLabel(self)
-            #label.setGeometry(20, 20, 540, 540)
+        pixmap = QPixmap(fname[0])
+        self.ui.photoLabel.setPixmap(QPixmap(pixmap))
+        self.ui.photoLabel.resize(pixmap.width(), pixmap.height())
+        self.ui.photoLabel.setGeometry(20, 20, 540, 540)
 
-            pixmap = QPixmap(fname[0])
-
-           ## self.label.setPixmap(QPixmap(pixmap))
-
-
+    def MedianFilter(self):
+        new_image = cv2.medianBlur(self.pixmap)
+        plt.figure((11, 6))
+        plt.subplot(121), plt.imshow(cv2.cvtColor(self.pixmap, cv2.COLOR_HSV2RGB)), plt.title('Original')
+        plt.xticks([]), plt.yticks([])
+        plt.subplot(122), plt.imshow(cv2.cvtColor(new_image, cv2.COLOR_HSV2RGB)), plt.title('Median Filter')
+        plt.xticks([]), plt.yticks([])
+        plt.show()
 
 def main():
     app = QApplication([])
