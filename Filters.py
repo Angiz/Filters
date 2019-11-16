@@ -35,16 +35,52 @@ class MyForm(QMainWindow):
         self.ui.photoLabel.setPixmap(QPixmap(pixmap).scaled(w, h, Qt.KeepAspectRatio))
 
     def MedianFilter(self):
-        #DialogFunc()
-        src = cv2.imread(fname[0], 7)
-        img2 = cv2.medianBlur(src, 7)
-        cv2.imshow("Median", img2)
+
+        def nothing(x):
+            pass
+
+        src = cv2.imread(fname[0])
+        cv2.namedWindow("Median")
+        cv2.createTrackbar("Kernel", "Median", 0, 7, nothing)
+        img2 = cv2.medianBlur(src, 1)
+
+        while (1):
+            cv2.imshow("Median", img2)
+            k = cv2.waitKey(1) & 0xFF
+            if k == 27:
+                break
+            kernel = (int)(cv2.getTrackbarPos("Kernel", "Median"))
+            if kernel==0 or kernel==2 or kernel==4 or kernel==6:
+                kernel=kernel+1
+            img2[:] = [kernel]
+            img2 = cv2.medianBlur(src, kernel)
+
+        cv2.destroyAllWindows()
+
 
     def ErosionFilter(self):
+
+        def nothing(x):
+            pass
+
         src = cv2.imread(fname[0])
+        cv2.namedWindow("Erosion")
+        cv2.createTrackbar("Kernel", "Erosion", 0, 7, nothing)
         kernel = np.ones((5, 5), np.uint8)
         img_erosion = cv2.erode(src, kernel, 1)
-        cv2.imshow('Erosion', img_erosion)
+        while 1:
+            cv2.imshow("Erosion", img_erosion)
+            k = cv2.waitKey(1) & 0xFF
+            if k == 27:
+                break
+            ker = (int)(cv2.getTrackbarPos("Kernel", "Erosion"))
+            if ker == 0 or ker == 2 or ker == 4 or ker == 6:
+                ker = ker + 1
+            img_erosion[:] = [ker]
+            kernel = np.ones((ker, ker), np.uint8)
+            img_erosion = cv2.erode(src, kernel, 1)
+
+        cv2.destroyAllWindows()
 
     def DilationFilter(self):
 
@@ -53,7 +89,7 @@ class MyForm(QMainWindow):
 
         src = cv2.imread(fname[0])
         cv2.namedWindow("Dilation")
-        cv2.createTrackbar("Kernel", "Dilation", 1, 7, nothing)
+        cv2.createTrackbar("Kernel", "Dilation", 0, 7, nothing)
         kernel = np.ones((5, 5), np.uint8)
         img_dilation = cv2.dilate(src, kernel, 1)
 
@@ -62,17 +98,38 @@ class MyForm(QMainWindow):
             k = cv2.waitKey(1) & 0xFF
             if k == 27:
                 break
-            ker1 = cv2.getTrackbarPos("Kernel", "Dilation")
-            img_dilation[:] = [ker1]
-            kernel = np.ones((ker1, ker1), np.uint8)
+            ker = (int)(cv2.getTrackbarPos("Kernel", "Dilation"))
+            if ker==0 or ker==2 or ker==4 or ker==6:
+                ker=ker+1
+            img_dilation[:] = [ker]
+            kernel = np.ones((ker, ker), np.uint8)
             img_dilation = cv2.dilate(src, kernel, 1)
 
         cv2.destroyAllWindows()
 
+
     def SmoothingFilter(self):
+
+        def nothing(x):
+            pass
+
         src = cv2.imread(fname[0])
-        blur = cv2.blur(src, (5,5))
-        cv2.imshow("Smoothing", blur)
+        cv2.namedWindow("Smoothing")
+        cv2.createTrackbar("Kernel", "Smoothing", 0, 7, nothing)
+        blur = cv2.blur(src, (1,1))
+
+        while (1):
+            cv2.imshow("Smoothing", blur)
+            k = cv2.waitKey(1) & 0xFF
+            if k == 27:
+                break
+            kernel = (int)(cv2.getTrackbarPos("Kernel", "Smoothing"))
+            if kernel==0 or kernel==2 or kernel==4 or kernel==6:
+                kernel=kernel+1
+            blur[:] = [kernel]
+            blur = cv2.blur(src, (kernel, kernel))
+
+        cv2.destroyAllWindows()
 
     def SobelFilter(self):
         src = cv2.imread(fname[0], 0)
